@@ -1,0 +1,256 @@
+/* CSS STYLES ONLY — About.module.css */
+/* Your existing About layout, recolored for the arches artwork. */
+.about {
+  /* SIZE CONTROLS — change these values only. */
+  --about-step-size: 32px;       /* Step headings, desktop. */
+  --about-eyes-scale: 0.65;      /* 1 = full size; 0.5 = half size. */
+  --about-picky-scale: 0.65;
+  --about-hands-scale: 0.65;
+  --about-art-height: 140px;     /* Space reserved for artwork. */
+  --about-art-gap: 16px;         /* Gap below the paragraph. */
+
+  /* ABOUT-ONLY COLORS — inherited by text and animated artwork. */
+  --portfolio-background: var(--cs-sky);
+  --portfolio-foreground: var(--cs-ink);
+  --portfolio-muted: var(--cs-muted);
+  --portfolio-accent: var(--cs-accent);
+  --portfolio-line: rgba(23, 56, 84, 0.28);
+  --cream: var(--cs-ink);
+  --about-accent: var(--portfolio-accent);
+  --about-line: var(--portfolio-line);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 72px;
+  min-height: 82svh;
+  padding: 96px 6% 96px;
+  background: var(--portfolio-background);
+  color: var(--portfolio-foreground);
+}
+
+/* Heading and personal introduction */
+.introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 4vw, 76px);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-gabarito), sans-serif;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-size: var(--type-section);
+  font-weight: 700;
+}
+
+.heading > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.headingAccent {
+  color: var(--about-accent);
+}
+
+.period {
+  color: var(--cream);
+}
+
+.description {
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  padding-left: clamp(24px, 3vw, 48px);
+  border-left: 1px solid var(--about-line);
+  line-height: 1.45;
+  letter-spacing: -0.025em;
+  font-size: var(--type-lead);
+}
+
+.description strong {
+  color: var(--about-accent);
+  font-weight: 700;
+}
+
+/* Three principles, separated by editorial rules */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 44px 0 0;
+  border-top: 1px solid var(--about-line);
+  list-style: none;
+}
+
+.principle {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  padding-inline: clamp(24px, 3vw, 52px);
+}
+
+.principle:first-child {
+  padding-left: 0;
+}
+
+.principle:last-child {
+  padding-right: 0;
+}
+
+.principle + .principle {
+  border-left: 1px solid var(--about-line);
+}
+
+.number {
+  display: block;
+  color: var(--about-accent);
+  font-weight: 700;
+  line-height: 1;
+  font-size: var(--type-step);
+}
+
+.principleTitle {
+  margin: 16px 0 0;
+  font-family: var(--font-gabarito), sans-serif;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  font-size: var(--about-step-size);
+  font-weight: 700;
+}
+
+.principleDescription {
+  max-width: 330px;
+  margin: 18px 0 0;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  font-size: var(--type-body);
+}
+
+/* Cream backings preserve the current text positions and artwork sizes. */
+.description::before {
+  content: "";
+  position: absolute;
+  inset: -20px -20px -20px 12px;
+  z-index: -1;
+  border-radius: 24px;
+  background: var(--cs-paper);
+}
+
+.principle::before {
+  content: "";
+  position: absolute;
+  inset: -18px 14px -8px;
+  z-index: -1;
+  border-radius: 22px;
+  background: var(--cs-paper);
+}
+.principle:first-child::before { left: -16px; }
+.principle:last-child::before { right: -16px; }
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .about {
+    --about-step-size: 28px; /* Tablet step heading size. */
+    padding-block: 80px;
+    gap: 60px;
+  }
+
+  .introduction {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .description {
+    max-width: 720px;
+  }
+
+  .principle {
+    padding-inline: 24px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .about {
+    --about-step-size: 28px; /* Mobile step heading size. */
+    --about-eyes-scale: 0.6;
+    --about-picky-scale: 0.6;
+    --about-hands-scale: 0.6;
+    --about-art-height: 130px;
+    gap: 48px;
+    padding: 64px 6% 80px;
+  }
+
+  .description {
+    padding-left: 20px;
+    line-height: 1.5;
+  }
+
+  .principles {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+
+  .principle,
+  .principle:first-child,
+  .principle:last-child {
+    padding: 28px 0;
+  }
+
+  .principle + .principle {
+    border-left: 0;
+    border-top: 1px solid var(--about-line);
+  }
+
+  .principle::before,
+  .principle:first-child::before,
+  .principle:last-child::before { inset: 12px -12px; }
+
+  .principleTitle {
+    margin-top: 12px;
+  }
+
+  .principleDescription {
+    max-width: 540px;
+    margin-top: 14px;
+  }
+}
+/* Word Stagger — replaces the previous Mask Rise rules. */
+.wordClip {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.staggerWord {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.principle[data-word-ready="true"] .staggerWord {
+  transform: translateY(115%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .principle[data-word-ready="true"] .staggerWord {
+    transform: none;
+  }
+}
+
+.heading[id="about-title"] {
+  /* The section already provides a 6vw gutter. Keep the title beyond the Menu. */
+  margin-left: max(0px, calc(clamp(12px, 2vw, 32px) + env(safe-area-inset-left, 0px) + 7rem + 16px - 6vw));
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  .heading[id="about-title"] > span { white-space: normal; }
+}
+

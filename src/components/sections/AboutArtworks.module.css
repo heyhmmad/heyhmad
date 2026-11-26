@@ -1,0 +1,39 @@
+/* Sizes are controlled at the top of About.module.css. */
+.artArea {
+  overflow: clip;
+  height: var(--about-art-height);
+  margin-top: var(--about-art-gap);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--portfolio-foreground);
+  pointer-events: none;
+}
+.artScale { width: 240px; height: 194px; flex: 0 0 240px; transform-origin: left center; }
+.curiousScale { transform: scale(var(--about-eyes-scale)); }
+.pickyScale { transform: scale(var(--about-picky-scale)); }
+.handsScale { transform: scale(var(--about-hands-scale)); }
+.curiousCanvas,.pickyCanvas,.handsCanvas { position: relative; width: 240px; height: 194px; }
+.eyes { position: absolute; left: 24px; top: 52px; display: flex; align-items: center; gap: 18px; transform: rotate(var(--tilt,0deg)); transition: transform .42s cubic-bezier(.16,1,.3,1); }
+.eyeWrap { position: relative; width: 65px; height: 76px; }
+.eyeWrap:nth-child(2) { transform: translateY(-7px); }
+.brow { position: absolute; left: 4px; top: -23px; width: 57px; height: 8px; background: var(--about-accent); border-radius: 8px; transform: translateY(var(--brow-left-y,-3px)) rotate(var(--brow-left-angle,-9deg)); transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.eyeWrap:nth-child(2) .brow { transform: translateY(var(--brow-right-y,-8px)) rotate(var(--brow-right-angle,12deg)); }
+.eye { position: absolute; inset: 0; background: var(--cs-paper); box-shadow: inset 0 0 0 2px var(--portfolio-foreground); border-radius: 48% 48% 46% 46%; overflow: hidden; }
+.iris { position: absolute; left: 20px; top: 25px; width: 33px; height: 39px; border-radius: 50%; background: var(--about-accent); transform: translate(var(--gaze-x,0px),var(--gaze-y,0px)); transition: transform .18s cubic-bezier(.16,1,.3,1); }
+.pupil { position: absolute; left: 10px; top: 10px; width: 17px; height: 23px; background: var(--portfolio-foreground); border-radius: 50%; }
+.pupil::after { content: ''; position: absolute; left: 3px; top: 3px; width: 5px; height: 6px; border-radius: 50%; background: var(--cs-paper); }
+.piece { position: absolute; left: 0; top: 0; width: 20px; height: 20px; transform-origin: 0 0; border-radius: 1px; background: var(--portfolio-foreground); }
+.piece:nth-child(3),.piece:nth-child(6) { background: var(--about-accent); }
+.ground { position: absolute; left: 13px; right: 9px; bottom: 22px; height: 1px; background: var(--about-line); }
+.launcher { position: absolute; left: 22px; bottom: 23px; width: 63px; height: 31px; border-radius: 7px 7px 0 0; background: var(--portfolio-foreground); }
+.cap { position: absolute; left: 26px; bottom: 54px; width: 55px; height: 15px; border-radius: 7px 7px 3px 3px; background: var(--about-accent); box-shadow: 0 5px 0 color-mix(in srgb,var(--about-accent) 60%,var(--portfolio-background)); }
+.ball { position: absolute; left: 42px; top: 102px; width: 23px; height: 23px; border-radius: 50%; background: var(--about-accent); box-shadow: inset -4px -4px 0 rgb(0 0 0 / .18); transform-origin: 50% 100%; }
+.ring,.ringFront { position: absolute; left: 168px; top: 48px; width: 37px; height: 65px; border: 5px solid var(--portfolio-foreground); border-radius: 50%; transform: rotate(-14deg); box-sizing: border-box; }
+.ringFront { border-top-color: transparent; border-left-color: transparent; }
+.stem { position: absolute; left: 190px; top: 108px; width: 4px; height: 63px; background: var(--about-line); }
+.foot { position: absolute; left: 174px; top: 169px; width: 37px; height: 3px; border-radius: 2px; background: var(--portfolio-foreground); }
+@media (prefers-reduced-motion: reduce) {
+  .eyes,.brow,.iris { transition: none; }
+}
+

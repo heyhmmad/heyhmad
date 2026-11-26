@@ -1,0 +1,190 @@
+
+@import "tailwindcss";
+
+/* ================================
+   Design Tokens
+================================ */
+
+:root {
+  --cs-paper: #FAFDFF;
+  --cs-sky: #CDEBFF;
+  --cs-ridge: #80BAE9;
+  --cs-accent: #236EA8;
+  --cs-ink: #173854;
+  --cs-mist: #F0F8FF;
+  --cs-pale: #E2F2FF;
+  --cs-haze: #B6DDF7;
+  --cs-water: #A6D3F2;
+  --cs-blue: #579ECB;
+  --cs-slate: #42799D;
+  --cs-deep: #2F5979;
+  --cs-muted: #45627A;
+  --cs-line: #91ABC0;
+  --cs-shadow: #102B40;
+  --cs-dusk: #639FC8;
+  --cs-mid: #96C7E9;
+  --cs-seam: #C2E4FB;
+
+  /* Portfolio palette — edit these six colors. */
+  --portfolio-background: var(--cs-mist);
+  --portfolio-surface: var(--cs-paper);
+  --portfolio-foreground: var(--cs-ink);
+  --portfolio-accent: var(--cs-accent);
+  --portfolio-muted: var(--cs-muted);
+  --portfolio-line: var(--cs-line);
+
+  /* Compatibility names used by existing components. */
+  --cream: var(--portfolio-foreground);
+  --charcoal: var(--portfolio-background);
+  --olive: var(--portfolio-accent);
+  color-scheme: light;
+  /* Shared Gabarito size scale. Change these values to tune the whole portfolio. */
+  --type-hero: 112px;
+  --type-name: 144px;
+  --type-section: 72px;
+  --type-project: 48px;
+  --type-card: 24px;
+  --type-lead: 24px;
+  --type-body: 18px;
+  --type-small: 16px;
+  --type-button: 14px;
+  --type-label: 12px;
+  --type-number: 80px;
+  --type-step: 24px;
+}
+
+@media (max-width: 1100px){
+
+  :root{
+    --type-hero: 88px;
+    --type-name: 112px;
+    --type-section: 56px;
+    --type-project: 36px;
+    --type-card: 24px;
+    --type-lead: 22px;
+    --type-number: 64px;
+  }
+}
+
+@media (max-width: 768px){
+
+  :root{
+    --type-hero: clamp(48px, 12vw, 88px);
+    --type-name: clamp(52px, 13vw, 96px);
+    --type-section: 36px;
+    --type-project: 32px;
+    --type-card: 24px;
+    --type-lead: 20px;
+    --type-body: 16px;
+    --type-small: 14px;
+    --type-number: 44px;
+  }
+}
+
+@media (max-width: 480px){
+
+  :root{
+    --type-section: 32px;
+  }
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-charcoal: var(--charcoal);
+  --color-olive: var(--olive);
+  --font-sans: var(--font-gabarito), sans-serif;
+  --font-display: var(--font-gabarito), sans-serif;
+}
+
+/* ================================
+   Global Reset
+================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--portfolio-background);
+  color: var(--portfolio-foreground);
+  font-family: var(--font-gabarito), sans-serif;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-gabarito), sans-serif;
+  font-style: normal;
+  font-weight: 700;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+/* ================================
+   Selection & Accessibility
+================================ */
+
+::selection {
+  background: var(--olive);
+  color: var(--cs-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Space for the floating mobile navigation */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Fade navigation away while a project takes focus */
+nav[aria-label="Main navigation"] {
+  transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:has(
+    #work [data-work-surface][data-active="true"]
+  ) nav[aria-label="Main navigation"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* Keep just these two headings clear of the fixed top-left Menu button. */
+:root {
+  --menu-edge: clamp(12px, 2vw, 32px);
+  --menu-button-width: 6.5rem;
+  --menu-heading-gap: 12px;
+}
+nav[aria-label="Portfolio sections"] {
+  left: calc(var(--menu-edge) + env(safe-area-inset-left, 0px));
+}
+nav[aria-label="Portfolio sections"] > button {
+  box-sizing: border-box;
+  inline-size: var(--menu-button-width);
+  padding-inline: 0;
+}
+#expertise-title,
+#about-title {
+  /* The section already supplies a 6vw gutter. Add only the missing distance. */
+  margin-inline-start: max(0px, calc(var(--menu-edge) + env(safe-area-inset-left, 0px) + var(--menu-button-width) + var(--menu-heading-gap) - 6vw));
+  min-inline-size: 0;
+}
+@media (max-width: 768px) {
+  #about-title > span { white-space: normal; }
+}
