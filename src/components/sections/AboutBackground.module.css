@@ -1,0 +1,50 @@
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--cs-sky);
+}
+
+.scene { display: block; width: 100%; height: 100%; }
+
+.arches {
+  transform-origin: 680px 980px;
+  animation: breathe 8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+.scallopTop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70px;
+  background-color: var(--cs-ink);
+  background-image: radial-gradient(circle at 50% 0, var(--cs-deep) 0 24px, transparent 25px);
+  background-size: 60px 70px;
+}
+
+.scallopBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+  background-image: radial-gradient(circle at 50% 100%, var(--cs-ink) 0 22px, transparent 23px);
+  background-size: 60px 40px;
+}
+
+@media (max-width: 768px) {
+  /* Keep the arches broad on tall mobile layouts. */
+  .scene { position: absolute; bottom: 0; height: min(900px, 100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arches { animation: none; }
+}

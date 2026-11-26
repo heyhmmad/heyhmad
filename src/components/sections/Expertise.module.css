@@ -1,0 +1,339 @@
+.expertise {
+  /* Dusk palette, scoped to this section only so the rest of the site is untouched. */
+  --portfolio-surface: var(--cs-paper);     /* card faces */
+  --portfolio-foreground: var(--cs-ink);  /* deep plum text */
+  --portfolio-muted: var(--cs-muted);
+  --portfolio-line: rgba(23, 56, 84, 0.28);
+  --portfolio-accent: var(--cs-accent);      /* terracotta */
+  --paper: var(--cs-sky);                 /* sky, also the fallback behind the artwork */
+  --ink: var(--portfolio-foreground);
+  --olive: var(--portfolio-accent);
+  /* Main size controls. */
+  --card-height: 580px;
+  --card-radius: 12px;
+  --card-padding: 26px;
+  background: var(--paper);
+  color: var(--ink);
+  position: relative;
+  scroll-margin-top: 24px;
+}
+
+.expertise,
+.expertise * { box-sizing: border-box; }
+
+.stage {
+  position: relative;
+  --stage-top: 72px;
+  padding: var(--stage-top) 6% 96px;
+}
+
+/* ---------- Artwork layer ---------- */
+
+/* Phones, tablets and short screens: a viewport-tall layer that stays in view
+   while the cards scroll over it. The negative margin keeps it out of the flow. */
+.art {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100svh;
+  margin-bottom: -100svh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.expertise:not([data-deck="true"]) .art {
+  margin-inline: -6.8181818%; /* 6% section gutter relative to the 88% content width */
+  margin-top: calc(-1 * var(--stage-top));
+  margin-bottom: calc(var(--stage-top) - 100svh);
+}
+
+.art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fine paper grain. A separate static layer, so it never repaints with the parallax. */
+.art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .18 0 0 0 0 .2 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.heading,
+.deck {
+  position: relative;
+  z-index: 1;
+}
+
+.heading {
+  margin: 0 0 48px;
+  overflow: clip;
+  padding-block: 12px;
+  font-family: var(--font-gabarito), sans-serif;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  font-size: var(--type-section);
+  font-weight: 700;
+}
+
+.headingLine,
+.headingAccentLine { display: block; }
+.headingAccentLine { color: var(--olive); margin-left: 8%; }
+.headingWord { display: inline-block; white-space: nowrap; }
+.headingLetter { display: inline-block; }
+
+@media (max-width: 768px) {
+  .headingAccentLine { margin-left: 0; }
+}
+
+.deck {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  min-width: 0;
+  perspective: 1400px;
+}
+
+.turn {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.front,
+.back {
+  border-radius: var(--card-radius);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 22px 44px -18px rgba(23, 56, 84, 0.45);
+  box-shadow: 0 0 0 3px var(--cs-paper), 0 22px 44px -18px rgba(23, 56, 84, 0.45);
+}
+
+.front {
+  /* ---- Inner line controls ---- */
+  --inset: 5px;   /* distance of the line from the card edge */
+  --line: 5px;     /* thickness of the line */
+  /* ------------------------------ */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: var(--card-height);
+  height: 100%;
+  padding: var(--card-padding);
+  background: var(--portfolio-surface);
+  color: var(--portfolio-foreground);
+  font-family: var(--font-gabarito), sans-serif;
+  transform: rotateY(0deg);
+}
+
+.front::before {
+  content: "";
+  position: absolute;
+  inset: var(--inset);
+  border: var(--line) solid rgba(35, 110, 168, 0.45);
+  border-radius: calc(var(--card-radius) - 4px);
+  pointer-events: none;
+}
+
+/* Card back: plum rim + cream outline + stepped frames. */
+.back {
+  /* ---- Border controls: change these numbers ---- */
+  --rim: 10px;      /* thickness of the plum edge */
+  --outline: 5px;   /* thickness of the cream line outside the plum */
+  --step: 14px;     /* thickness of each stepped frame band */
+  /* ------------------------------------------------ */
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--cs-deep);
+  border: var(--rim) solid var(--cs-deep);
+  transform: rotateY(180deg);
+  box-shadow:
+    0 0 0 var(--outline) var(--cs-paper),
+    0 22px 44px -18px rgba(23, 56, 84, 0.45);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(
+    var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c),
+    100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%,
+    0 calc(100% - var(--c)), 0 var(--c)
+  );
+}
+
+.layer > .layer { inset: var(--step); }
+
+.l0 { --c: 38px; background: var(--cs-haze); }
+.l1 { --c: 32px; background: var(--cs-mid); }
+.l2 { --c: 26px; background: var(--cs-dusk); }
+.l3 { --c: 20px; background: var(--cs-deep); }
+.l4 { --c: 14px; background: var(--cs-paper); }
+
+.weave {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(35, 110, 168, 0.38) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(-45deg, rgba(35, 110, 168, 0.38) 0 1px, transparent 1px 20px);
+}
+
+.medallion {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(62%, 170px);
+  transform: translate(-50%, -50%);
+}
+
+.title {
+  margin: 0;
+  font-family: inherit;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  font-size: var(--type-card);
+  font-weight: 600;
+  min-height: 60px;
+}
+
+.title span { display: block; }
+
+.description {
+  margin: 16px 0 0;
+  color: var(--portfolio-muted);
+  line-height: 1.5;
+  font-size: calc(var(--type-small) * 1.125);
+  min-height: 72px;
+}
+
+.details {
+  display: block;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.details li {
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--portfolio-line);
+  color: var(--portfolio-foreground);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-transform: uppercase;
+  font-size: calc(var(--type-small) * 1.125);
+}
+
+.number {
+  align-self: flex-end;
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--portfolio-accent);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  font-size: var(--type-project);
+  font-weight: 500;
+}
+
+/* Desktop scroll scene: deck -> fan -> four service cards. */
+.expertise[data-deck="true"] {
+  height: calc(100svh + var(--scroll-distance, 240svh));
+}
+
+.expertise[data-deck="true"] .stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+/* In the pinned scene the artwork simply fills the stage. */
+.expertise[data-deck="true"] .art {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  margin: 0;
+}
+
+.expertise[data-deck="true"] .heading {
+  margin-bottom: 16px;
+}
+
+.expertise[data-deck="true"] .deck {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+}
+
+.expertise[data-deck="true"] .card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc((100% - 72px) / 4);
+  height: var(--card-height);
+  will-change: transform;
+}
+
+.expertise[data-deck="true"] .front { min-height: 0; }
+
+/* Reference scale for wide desktop screens. */
+@media (min-width: 1600px) {
+  .expertise { --card-height: 600px; --card-padding: 30px; }
+  .title { min-height: 68px; }
+  .description { min-height: 72px; }
+  .details { margin-top: 24px; }
+  .details li { padding: 13px 0; }
+}
+
+/* Tablet: keep the copy legible in two columns. */
+@media (max-width: 1279px) {
+  .stage { --stage-top: 64px; padding: var(--stage-top) 6% 72px; }
+  .deck { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .expertise { --card-height: 540px; }
+  .front { padding: 28px; }
+}
+
+/* Short desktop screens also get normal flow instead of a clipped pinned scene. */
+@media (min-width: 1280px) and (max-height: 819px) {
+  .deck { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 650px) {
+  .stage { --stage-top: 56px; padding: var(--stage-top) 6% 72px; }
+  .heading { margin-bottom: 36px; }
+  .deck { grid-template-columns: 1fr; gap: 22px; }
+  .expertise { --card-height: 490px; }
+  .front { padding: 24px; }
+  .back { --step: 10px; }
+  .title { min-height: 53px; }
+  .description { min-height: 63px; }
+  .details li { padding: 11px 0; }
+  .back { --step: 10px; --rim: 8px; --outline: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back { display: none; }
+}
+
+.heading[id="expertise-title"] {
+  /* The section already provides a 6vw gutter. Keep the title beyond the Menu. */
+  margin-left: max(0px, calc(clamp(12px, 2vw, 32px) + env(safe-area-inset-left, 0px) + 7rem + 16px - 6vw));
+  min-width: 0;
+}

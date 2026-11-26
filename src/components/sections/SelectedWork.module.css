@@ -1,0 +1,586 @@
+/* Fourth style: curved wall. Pinned scroll, Number | Image | Title. */
+.work {
+  /* Work-only Cloud Climb palette. No other section is recolored. */
+  --portfolio-background: var(--cs-sky);
+  --portfolio-foreground: var(--cs-ink);
+  --portfolio-muted: var(--cs-muted);
+  --portfolio-accent: var(--cs-accent);
+  --paper: var(--portfolio-background);
+  --ink: var(--portfolio-foreground);
+  --accent: var(--portfolio-accent);
+
+  /* Tweak these to control the feel. */
+  --section-width: 1540px;
+  --slide-width: min(1360px, 92vw);
+  --radius: 1500px;            /* wall curvature: smaller = more bend */
+  --perspective: 2600px;       /* camera distance: larger = flatter */
+  --step-angle: 58deg;         /* how far neighbours swing round the wall */
+  --panel-tilt: 12deg;         /* inward bend of the side panels */
+  --scroll-per-project: 120svh;
+
+  --tint-accent: var(--cs-pale);
+  --tint-ink: var(--cs-paper);
+  --band: color-mix(in srgb, var(--accent) 9%, var(--paper));
+
+  position: relative;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  gap: 32px;
+  width: 100%;
+  max-width: var(--section-width);
+  margin: 0 auto 32px;
+  padding: 0 6%;
+  box-sizing: border-box;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-gabarito), sans-serif;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  font-size: var(--type-section);
+  font-weight: 700;
+}
+
+.period {
+  color: var(--portfolio-accent);
+}
+
+/* Preserve the existing pinned heading position above Cloud Climb. */
+@media (min-width: 901px) and (min-height: 701px) and (prefers-reduced-motion: no-preference) {
+  .intro {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 250;
+    margin: 0;
+    align-items: center;
+    padding: 0 6%;
+  }
+
+  .heading {
+    white-space: nowrap; /* Size comes from --type-section, like the other headings. */
+    line-height: 0.95;
+  }
+
+  }
+
+/* Scroll distance for the pinned stage */
+.track {
+  height: calc(100svh + (var(--count) - 1) * var(--scroll-per-project));
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  /* Clip the 3D neighbours without creating an inner scroll container. */
+  overflow: clip;
+  perspective: var(--perspective);
+  perspective-origin: 50% 50%;
+  box-sizing: border-box;
+}
+
+/* Lens-shaped bands above and below, like the layout sketch */
+.bandTop,
+.bandBottom {
+  position: absolute;
+  left: 50%;
+  width: 132%;
+  height: 46%;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--band);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  pointer-events: none;
+}
+
+.bandTop {
+  top: -28%;
+}
+
+.bandBottom {
+  bottom: -28%;
+}
+
+.wall {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.slide {
+  --offset: 0;
+  --dist: 0;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--slide-width);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(132px, 0.65fr) minmax(0, 2.6fr) minmax(0, 1.45fr);
+  align-items: center;
+  column-gap: clamp(14px, 1.6vw, 28px);
+  padding-block: 36px 76px;
+
+  transform-style: preserve-3d;
+  transform:
+    translate(-50%, -50%)
+    translateZ(var(--radius))
+    rotateY(calc(var(--offset) * var(--step-angle) * -1))
+    translateZ(calc(var(--radius) * -1));
+  opacity: max(0, calc(1 - var(--dist)));
+  will-change: transform, opacity;
+}
+
+/* Side panels bow in toward the middle, so the active slide still feels curved. */
+.numberPanel,
+.titlePanel {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  transform-style: preserve-3d;
+}
+
+.numberPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+  max-height: 62svh;
+  margin-block: auto;
+  padding: 28px 22px 26px 26px;
+  background: var(--tint-accent);
+  border-radius: 28px 140px 140px 28px / 28px 50% 50% 28px;
+  transform-origin: 100% 50%;
+  transform: rotateY(var(--panel-tilt));
+}
+
+.titlePanel {
+  padding: 28px;
+  background: var(--tint-ink);
+  border-radius: 28px;
+  transform-origin: 0 50%;
+  transform: rotateY(calc(var(--panel-tilt) * -1));
+}
+
+.visual {
+  min-width: 0;
+}
+
+/* Screenshot frame: leaf-shaped image echoing the curved panels,
+   a compact Visit site button, and a vertical site label. */
+.showcaseFrame {
+  --leaf: clamp(36px, 4.2vw, 68px);
+  /* Frame grows outward: the screenshot retains its original width. */
+  --frame-padding: clamp(8px, 1vw, 16px);
+  --frame-line: 4px;
+  --frame-outset: calc(var(--frame-padding) + var(--frame-line));
+
+  position: relative;
+  margin: 6px 20px 32px 28px;
+}
+
+/* Paper frame: cream sheet, coral inner rule, two sheets of paper behind. */
+.showcaseFrame { isolation: isolate; }
+
+.imageFrame {
+  --frame-radius: clamp(18px, 2.2vw, 30px);
+  position: relative;
+  padding: var(--frame-padding);
+  margin-inline: calc(0px - var(--frame-outset));
+  background: var(--tint-ink);
+  border-radius: var(--frame-radius);
+  transform: rotate(-1deg);
+  box-shadow:
+    0 clamp(10px, 1.4vw, 20px) 0 color-mix(in srgb, var(--accent) 26%, transparent),
+    0 40px 60px -34px rgb(23 56 84 / 0.45);
+}
+
+.imageInner {
+  position: relative;
+  overflow: hidden;
+  border: var(--frame-line) solid var(--accent);
+  border-radius: calc(var(--frame-radius) - 8px);
+  background: var(--paper);
+  line-height: 0;
+}
+
+/* Peach wash plus a fade at the bottom so the screenshot settles into the clouds. */
+.wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background:
+    linear-gradient(rgb(150 199 233 / 0.2), rgb(150 199 233 / 0.2)),
+    linear-gradient(180deg, transparent 58%, rgb(150 199 233 / 0.5) 100%);
+}
+
+.paperBack,
+.paperMid {
+  position: absolute;
+  inset: 0;
+  inset-inline: calc(0px - var(--frame-outset));
+  z-index: -1;
+  border-radius: clamp(18px, 2.2vw, 30px);
+  pointer-events: none;
+}
+
+.paperBack {
+  background: color-mix(in srgb, var(--accent) 45%, var(--tint-accent));
+  transform: rotate(3.2deg) translateY(clamp(10px, 1.4vw, 20px));
+}
+
+.paperMid {
+  background: color-mix(in srgb, var(--accent) 22%, var(--tint-accent));
+  transform: rotate(-2deg) translateY(clamp(6px, 0.8vw, 12px));
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.edgeLabel {
+  position: absolute;
+  top: 50%;
+  left: calc(-22px - var(--frame-outset));
+  translate: -50% -50%;
+  rotate: -90deg;
+  color: var(--portfolio-muted);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  white-space: nowrap;
+  font-size: var(--type-label);
+}
+
+/* Approved button: edit the size, weight, and fill speed here. */
+
+.frameLink {
+  position: absolute;
+  right: 0;
+  bottom: -18px;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  max-width: 100%;
+  padding: 0 10px;
+  border-radius: 30px;
+  background: var(--cs-paper);
+  color: var(--cs-ink);
+  font-family: var(--font-gabarito), sans-serif;
+  letter-spacing: .04em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 250ms ease;
+  font-size: var(--type-button);
+  font-weight: 600;
+}
+
+.frameLink::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 500ms cubic-bezier(.2,.8,.2,1);
+}
+
+.frameLink:focus-visible { color: #fff;
+  outline: 2px solid var(--portfolio-accent);
+  outline-offset: 5px; }
+
+.frameLink:focus-visible::before { transform: scaleX(1); }
+
+.frameLink:focus-visible .arrow { transform: rotate(-45deg); }
+
+.arrow {position: relative; width: 20px; height: 20px; flex-shrink: 0; transform: rotate(0deg); transition: transform 400ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Number panel */
+.projectNumber {
+  margin: 0;
+  color: var(--portfolio-accent);
+  font-family: var(--font-gabarito), sans-serif;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  font-size: var(--type-number);
+  font-weight: 600;
+}
+
+.projectNumber span {
+  display: block;
+  margin: 12px 0 0 4px;
+  color: var(--portfolio-muted);
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+}
+
+.category {
+  margin: 0;
+  color: var(--portfolio-muted);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-size: var(--type-label);
+}
+
+/* Title panel */
+.projectTitle {
+  margin: 0;
+  font-family: var(--font-gabarito), sans-serif;
+  letter-spacing: -0.035em;
+  font-size: var(--type-project);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.projectTitle>span {
+  display: block;
+}
+
+.accent {
+  color: var(--portfolio-accent);
+}
+
+.description {
+  max-width: 34ch;
+  margin: 22px 0 0;
+  padding-left: 18px;
+  border-left: 1px solid var(--portfolio-accent);
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  font-size: var(--type-body);
+}
+
+/* Progress dots inside the bottom band */
+.dots {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 3.5svh, 34px);
+  z-index: 200;
+  display: flex;
+  gap: 6px;
+  translate: -50% 0;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.dot span {
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 28%, transparent);
+  transition: width 350ms cubic-bezier(.22, 1, .36, 1), background 250ms ease;
+}
+
+.dot[aria-current="true"] span {
+  width: 48px;
+  background: var(--portfolio-accent);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--portfolio-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1100px) {
+  .work {
+    --slide-width: min(1000px, 92vw);
+    --radius: 1200px;
+    --perspective: 2100px;
+    --step-angle: 50deg;
+  }
+
+  .slide {
+    grid-template-columns: minmax(116px, 0.6fr) minmax(0, 2.3fr) minmax(0, 1.3fr);
+  }
+
+  .numberPanel {
+    padding: 22px 16px 22px 18px;
+  }
+
+  .titlePanel {
+    padding: 24px 20px;
+  }
+}
+
+/* Mobile: readable projects in normal page flow. */
+@media (max-width: 900px) {
+  .work {
+    --slide-width: 88vw;
+    --radius: 900px;
+    --perspective: 1500px;
+    --step-angle: 42deg;
+    --panel-tilt: 0deg;
+    --scroll-per-project: 100svh;
+  }
+
+  .work {
+    padding-top: 48px;
+  }
+
+  .intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 28px;
+    padding: 0 6%;
+  }
+
+  .bandTop {
+    top: -34%;
+  }
+
+  .bandBottom {
+    bottom: -34%;
+  }
+
+  .slide {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    row-gap: 16px;
+    padding-block: 56px 70px;
+  }
+
+  .numberPanel,
+.titlePanel {
+    transform: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+  }
+
+  .numberPanel {
+    grid-row: 1;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    align-self: auto;
+  }
+
+  .projectNumber {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .projectNumber span {
+    display: inline;
+    margin: 0;
+  }
+
+  .visual {
+    grid-row: 2;
+  }
+
+  .titlePanel {
+    grid-row: 3;
+  }
+
+  .showcaseFrame {
+      --leaf: 36px;
+    margin: 4px 0 32px 24px;
+  }
+
+  .description {
+    max-width: 48ch;
+    margin-top: 14px;
+  }
+
+  .projectTitle>span {
+    display: inline;
+  }
+
+  .projectTitle>span+span::before {
+    content: " ";
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .frameLink:hover {
+    color: #fff;
+  }.frameLink:hover::before { transform: scaleX(1); }
+
+  .frameLink:hover .arrow {
+    transform: rotate(-45deg);
+  }
+}
+
+/* Small screens, short windows, and reduced motion use a normal list.
+   Keep this breakpoint in sync with the animated media query in SelectedWork.js. */
+@media (max-width: 900px), (max-height: 700px), (prefers-reduced-motion: reduce) {
+  .track { height: auto; }
+  .stage {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    perspective: none;
+  }
+  .wall {
+    position: relative;
+    inset: auto;
+    display: grid;
+    gap: 64px;
+    padding-bottom: 64px;
+    transform: none;
+  }
+  .slide {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-inline: auto;
+    padding-block: 24px;
+    transform: none;
+    opacity: 1;
+    will-change: auto;
+  }
+  .numberPanel,
+.titlePanel { transform: none; }
+  .bandTop,
+.bandBottom,
+.dots { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frameLink,
+.arrow,
+.dot span { transition: none; }
+  .frameLink:hover,
+.frameLink:hover .arrow { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) { .frameLink::before { transition: none; } }

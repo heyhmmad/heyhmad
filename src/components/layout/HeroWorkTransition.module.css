@@ -1,0 +1,22 @@
+.flow {
+  position: relative;
+  isolation: isolate;
+}
+
+.flow :global(#home) {
+  z-index: 0;
+}
+
+/* Work rises over Hero with tighter spacing. */
+.flow :global(#work) {
+  position: relative;
+  z-index: 2;
+  padding-top: 44px;
+  background: var(--portfolio-background);
+}
+
+@media (max-width: 1024px) {
+  .flow :global(#work) {
+    padding-top: 32px;
+  }
+}
